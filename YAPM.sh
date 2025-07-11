@@ -187,9 +187,9 @@ main() {
 
 	# Exclude plugins from update
 	if [ -n "$exclude_numbers" ]; then
-		for plugin_file in $exclude_numbers; do
-			if [[ $plugin_file =~ ^[0-9]+$ ]] && [ $plugin_file -lt ${#outdated_plugins[@]} ]; then
-				unset 'plugins_to_update[$number]'
+		for plugin_number in $exclude_numbers; do
+			if [[ $plugin_number =~ ^[0-9]+$ ]] && [ $plugin_number -lt ${#outdated_plugins[@]} ]; then
+				unset 'plugins_to_update[$plugin_number]'
 			else
 				echo "Invalid number: $plugin_file"
 			fi
