@@ -65,6 +65,10 @@ false) ;;
 *) error_handler "Unknown value for DEBUG: '$DEBUG'. It can only be 'true' or 'false'" ;;
 esac
 
+# Source required functions
+[ ! -d "$root_dir/lib" ] && error_handler "Library directory '$root_dir/lib' not found"
+source "$root_dir/lib/functions.sh" || error_handler "Failed to source '$root_dir/lib/functions.sh'"
+
 # Filter flags
 while getopts "hv" opt; do
 	case "$opt" in
@@ -86,10 +90,6 @@ done
 shift $((OPTIND - 1))
 
 working_directory=$1
-
-# Source required functions
-[ ! -d "$root_dir/lib" ] && error_handler "Library directory '$root_dir/lib' not found"
-source "$root_dir/lib/functions.sh" || error_handler "Failed to source '$root_dir/lib/functions.sh'"
 
 # Check if working directory is set
 [ -z "$working_directory" ] && error_handler "Plugin directory not set\n\e[0m" && usage
