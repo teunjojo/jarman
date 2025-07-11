@@ -36,6 +36,7 @@ root_dir="$(dirname "$0")"
 
 # Error Handling
 trap 'error_handler "Unknown error occured while trying to execute: ${BASH_COMMAND}"' ERR
+trap 'exitcode=$?; if [ $exitcode -eq 1 ]; then echo -e "\e[33mExited with code 1.\nIf you think this is a bug, report it at the following link: https://github.com/teunjojo/yapm/issues\e[0m"; fi' EXIT
 
 #######################################
 # Function that handles errors
