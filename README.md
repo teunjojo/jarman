@@ -32,7 +32,7 @@ While this is not necessary, it helps prevent confusion and helps things stay cl
 
 Start the script using the following command.
 
-```console
+```bash
 ./YAPM.sh /path/to/plugins-directory
 ```
 
@@ -106,7 +106,6 @@ Do you want to continue? [Y/n]: y
 Updating plugins...
 EssentialsX.jar...Done
 ProtocolLib.jar...Done
-$
 ```
 
 Here `y` is enter to confirm and start updating the plugins.
