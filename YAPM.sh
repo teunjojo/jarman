@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# This script scans the plugins in a specified directory, checks for updates, and allows you to update them.
+# This script scans the JAR files in a specified directory, checks for updates, and allows you to update them.
 #
 # Author: Teuntje Kuipers (teunjojo)
 #
@@ -9,7 +9,7 @@
 # Script parameters
 #
 
-# The cache file used to remember plugin data
+# The cache file used to remember JAR file data
 cache_file=".cache.json"
 # If error outputs should be more verbose
 DEBUG=false
@@ -93,7 +93,7 @@ shift $((OPTIND - 1))
 working_directory=$1
 
 # Check if working directory is set
-[ -z "$working_directory" ] && error_handler "Plugin directory not set\n\e[0m" && usage
+[ -z "$working_directory" ] && error_handler "Directory not set\n\e[0m" && usage
 [ ! -d "$working_directory" ] && error_handler "Directory '$working_directory' not found"
 
 #
@@ -104,106 +104,106 @@ main() {
 
 	# Go to working directory
 	cd "$working_directory"
-	echo -e "Plugins in '$working_directory':"
+	echo -e "JAR files in '$working_directory':"
 
 	# Check if cache file is set
 	[ -z $cache_file ] && error_handler "Cache file location not set"
 	# If no cache file exists, create it
 	[ ! -f "$cache_file" ] && echo [] >$cache_file
 
-	# Get exising plugins from directory
-	local plugin_files=(*.jar)
-	if [ ${#plugin_files[@]} -eq 0 ]; then
-		echo "No plugins found in '$working_directory'"
+	# Get exising JAR files from directory
+	local jar_files=(*.jar)
+	if [ ${#jar_files[@]} -eq 0 ]; then
+		echo "No JAR files found in '$working_directory'"
 		exit 0
 	fi
 
-	local outdated_plugins=()
+	local outdated_jars=()
 
-	for plugin_file in "${plugin_files[@]}"; do
-		# Get plugin from cache
-		plugin=$(get_plugin "$plugin_file")
+	for jar_file in "${jar_files[@]}"; do
+		# Get JAR data from cache
+		jar_data=$(get_data "$jar_file")
 
 		# If its not in cache, register it
-		if [[ "$plugin" == "null" || -z "$plugin" ]]; then
-			register_plugin $plugin_file
-			# Reload plugin from cache
-			plugin=$(jq -r --arg filename "$plugin_file" 'first(.[] | select(.filename == $filename))' "$cache_file" 2>/dev/null)
+		if [[ "$jar_data" == "null" || -z "$jar_data" ]]; then
+			register_jar $jar_file
+			# Reload JAR data from cache
+			jar_data=$(jq -r --arg filename "$jar_file" 'first(.[] | select(.filename == $filename))' "$cache_file" 2>/dev/null)
 			# If still not in cache, this is a problem. Exit with error
-			[[ "$plugin" == "null" || -z "$plugin" ]] && error_handler "Unable to register plugin '$plugin_file' in cache file '$cache_file'"
+			[[ "$jar_data" == "null" || -z "$jar_data" ]] && error_handler "Unable to register JAR file '$jar_file' in cache file '$cache_file'"
 		fi
 
-		# Write plugin with status to the terminal
-		echo -ne " - $plugin_file "
+		# Write JAR with status to the terminal
+		echo -ne " - $jar_file "
 
-		# Prepare to get plugin status
-		plugin_type=$(echo $plugin | jq -r '.type' 2>/dev/null)
-		plugin_version=$(echo $plugin | jq -r '.version' 2>/dev/null)
+		# Prepare to get jar status
+		jar_type=$(echo $jar_data | jq -r '.type' 2>/dev/null)
+		jar_version=$(echo $jar_data | jq -r '.version' 2>/dev/null)
 
-		# Get the latest version of the plugin
+		# Get the latest version of the JAR file
 		local latest_version
-		latest_version=$(get_version "$plugin")
+		latest_version=$(get_version "$jar_data")
 		local latest_version_exitcode=$?
 
 		if [[ $latest_version_exitcode != 0 ]]; then
 			if [[ $latest_version_exitcode == 2 ]]; then
-				# Plugin type not set, print status as unmanaged and continue to next plugin
+				# JAR type not set, print status as unmanaged and continue to next JAR file
 				echo -e "\033[1;34m[Unmanaged]\033[0m\033[0m"
 				continue
 			fi
 			if [[ $latest_version_exitcode == 3 ]]; then
-				# Plugin type not known, throw error
-				echo -e "\033[1;31m[Unknown Type]\033[0m\033[2;37m ($plugin_version)\033[0m"
+				# JAR type not known, throw error
+				echo -e "\033[1;31m[Unknown Type]\033[0m\033[2;37m ($jar_version)\033[0m"
 				continue
 			fi
 			# Unknown error, throw error
-			error_handler "An unknown error occurred while getting the plugin version"
+			error_handler "An unknown error occurred while getting the JAR file version"
 		fi
 
-		# If the latest version is not the same as the plugin version, then it is outdated
-		if [ "$plugin_version" != "$latest_version" ]; then
-			echo -e "\033[1;33m[Outdated]\033[0m\033[2;37m ($plugin_version -> $latest_version)\033[0m"
-			outdated_plugins+=($plugin_file)
+		# If the latest version is not the same as the JAR file version, then it is outdated
+		if [ "$jar_version" != "$latest_version" ]; then
+			echo -e "\033[1;33m[Outdated]\033[0m\033[2;37m ($jar_version -> $latest_version)\033[0m"
+			outdated_jars+=($jar_file)
 		else
-			echo -e "\033[1;32m[Up to date]\033[0m\033[2;37m ($plugin_version)\033[0m"
+			echo -e "\033[1;32m[Up to date]\033[0m\033[2;37m ($jar_version)\033[0m"
 		fi
 	done
 
 	echo $seperator
 
-	if [ ${#outdated_plugins[@]} -eq 0 ]; then
-		echo "All plugins in '$working_directory' are up to date!"
+	if [ ${#outdated_jars[@]} -eq 0 ]; then
+		echo "All JAR files in '$working_directory' are up to date!"
 		exit 0
 	fi
 
-	echo "Plugins to update:"
+	echo "JAR files to update:"
 
-	for plugin_file in "${!outdated_plugins[@]}"; do
-		echo " [${plugin_file}] ${outdated_plugins[$plugin_file]}"
+	for jar_file in "${!outdated_jars[@]}"; do
+		echo " [${jar_file}] ${outdated_jars[$jar_file]}"
 	done
 
-	read -p "Plugins to EXCLUDE from update (separated by space) [eg: \"0 1\"]: " exclude_numbers
+	read -p "JAR files to EXCLUDE from update (separated by space) [eg: \"0 1\"]: " exclude_numbers
 
-	plugins_to_update=("${outdated_plugins[@]}")
+	jar_files_to_update=("${outdated_jars[@]}")
 
-	# Exclude plugins from update
+	# Exclude JAR files from update
 	if [ -n "$exclude_numbers" ]; then
-		for plugin_number in $exclude_numbers; do
-			if [[ $plugin_number =~ ^[0-9]+$ ]] && [ $plugin_number -lt ${#outdated_plugins[@]} ]; then
-				unset 'plugins_to_update[$plugin_number]'
+		for jar_number in $exclude_numbers; do
+			if [[ $jar_number =~ ^[0-9]+$ ]] && [ $jar_number -lt ${#outdated_jars[@]} ]; then
+				unset 'jar_files_to_update[$jar_number]'
 			else
-				echo "Invalid number: $plugin_file"
+				echo "Invalid number: $jar_file"
 			fi
 		done
 		# Re-index the array
-		plugins_to_update=("${plugins_to_update[@]}")
+		jar_files_to_update=("${jar_files_to_update[@]}")
 	fi
 
 	echo $seperator
-	echo "Updating the following plugins:"
+	echo "Updating the following JAR files:"
 
-	for plugin_file in "${plugins_to_update[@]}"; do
-		echo " - $plugin_file"
+	for jar_file in "${jar_files_to_update[@]}"; do
+		echo " - $jar_file"
 	done
 
 	while true; do
@@ -218,12 +218,12 @@ main() {
 	done
 
 	echo $seperator
-	echo "Updating plugins..."
+	echo "Updating JAR files..."
 
-	for plugin_file in "${plugins_to_update[@]}"; do
-		plugin=$(get_plugin "$plugin_file")
-		echo -ne "$plugin_file..."
-		update_plugin "$plugin"
+	for jar_file in "${jar_files_to_update[@]}"; do
+		jar_data=$(get_data "$jar_file")
+		echo -ne "$jar_file..."
+		update "$jar_data"
 		echo -e "\033[1;32mDone\033[0m"
 	done
 

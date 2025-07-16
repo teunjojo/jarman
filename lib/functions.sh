@@ -23,34 +23,34 @@ usage() {
 	cat <<EOF
 Usage: $0 [ -v ] [ -h ] <working_directory>
 
-This script scans the plugins in a specified directory, checks for updates, and allows you to update them.
+This script scans the JAR files in a specified directory, checks for updates, and allows you to update them.
 
-Example: $0 plugins
+Example: $0 folder/
 EOF
 }
 
 #######################################
-# Returns plugin data in JSON format for a plugin specified by the filename of a plugin
+# Returns JAR data in JSON format for a JAR specified by the filename of a JAR
 # Globals:
 #   None
 # Arguments:
-#   plugin_filename
+#   jar_filename
 #######################################
-get_plugin() {
-	local plugin_filename=$1
-	jq -r --arg filename "$plugin_filename" 'first(.[] | select(.filename == $filename))' "$cache_file" 2>/dev/null
+get_data() {
+	local jar_filename=$1
+	jq -r --arg filename "$jar_filename" 'first(.[] | select(.filename == $filename))' "$cache_file" 2>/dev/null
 }
 
 #######################################
-# Registers a plugin to the cache
+# Registers a JAR file to the cache
 # Globals:
 #	cache_file
 #   seperator
 # Arguments:
-#   plugin_filename
+#   jar_filename
 #######################################
-register_plugin() {
-	local plugin_filename=$1
+register_jar() {
+	local jar_filename=$1
 
 	local type=""
 	local url=""
@@ -63,15 +63,15 @@ register_plugin() {
 
 	while true; do
 		echo $seperator
-		echo -e "Unregistered Plugin found!"
-		read -p "Do you want to register '$plugin_filename'? [Y/n] " -r
+		echo -e "Unregistered JAR files found!"
+		read -p "Do you want to register '$jar_filename'? [Y/n] " -r
 		if [[ $REPLY =~ ^[Nn]$ ]]; then # If 'N' or 'n' then dont ask for user input
 			break
 		fi
 		if [[ -z $REPLY || $REPLY =~ ^[Yy]$ ]]; then # If 'Y', 'y' or empty, then ask for user input
-			read -p "What is the plugin update type? [jenkins]: " type
-			read -p "What is the update URL? [<Jenkins URL>/job/<Plugin>]: " url
+			read -p "What is the JAR file update type? [jenkins]: " type
 			if [ "$type" == "jenkins" ]; then
+				read -p "What is the update URL? [<Jenkins URL>/job/<Project>]: " url
 				local metadata=$(curl -s "$url/lastSuccessfulBuild/api/json")
 				readarray artifacts < <(echo "$metadata" | jq -r '.artifacts[].displayPath')
 				echo "Available artifacts: "
@@ -84,8 +84,8 @@ register_plugin() {
 		fi
 	done
 
-	local new_plugin=$(jq -n \
-		--arg filename "$plugin_filename" \
+	local new_jar=$(jq -n \
+		--arg filename "$jar_filename" \
 		--arg type "$type" \
 		--arg url "$url" \
 		--arg version "unknown" \
@@ -93,53 +93,53 @@ register_plugin() {
 		'{filename: $filename, type: $type, url: $url, version: $version, artifactNumber: $artifactNumber}')
 
 	tmp_file=$(mktemp)
-	jq --argjson new_plugin "$new_plugin" '. + [$new_plugin]' $cache_file >"$tmp_file" && mv "$tmp_file" "$cache_file"
+	jq --argjson new_jar "$new_jar" '. + [$new_jar]' $cache_file >"$tmp_file" && mv "$tmp_file" "$cache_file"
 	echo $seperator
 }
 
 #######################################
-# Updates a plugin to the latest version
+# Updates a JAR file to the latest version
 # Globals:
 #	None
 # Arguments:
-#   plugin_json
+#   jar_files
 #######################################
-update_plugin() {
-	local plugin_json=$1
-	local plugin_type=$(echo $plugin_json | jq -r '.type' 2>/dev/null)
-	case "$plugin_type" in
+update() {
+	local jar_data=$1
+	local jar_type=$(echo $jar_data | jq -r '.type' 2>/dev/null)
+	case "$jar_type" in
 	"jenkins")
-		jenkins_update_plugin "$plugin_json"
+		jenkins-update "$jar_data"
 		;;
 	"")
-		error_handler "Plugin type empty"
+		error_handler "JAR type empty"
 		;;
 	*)
-		error_handler "Plugin type '$plugin_type' unknown"
+		error_handler "JAR type '$jar_type' unknown"
 		;;
 	esac
 }
 
 #######################################
-# Returns the latest version of a plugin
+# Returns the latest version of a jar
 # Globals:
 #	None
 # Arguments:
-#   plugin_json
+#   jar_json
 #######################################
 get_version() {
-	local plugin_json=$1
-	local plugin_type=$(echo $plugin_json | jq -r '.type' 2>/dev/null)
-	case "$plugin_type" in
+	local jar_data=$1
+	local jar_type=$(echo $jar_data | jq -r '.type' 2>/dev/null)
+	case "$jar_type" in
 	"jenkins")
-		jenkins_get_version "$plugin_json"
+		jenkins_get_version "$jar_data"
 		;;
 	"")
-		# Plugin type not set
+		# JAR type not set
 		exit 2
 		;;
 	*)
-		# Unknown plugin type
+		# Unknown JAR type
 		exit 3
 		;;
 	esac

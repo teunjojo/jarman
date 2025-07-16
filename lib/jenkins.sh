@@ -5,43 +5,43 @@ if [ "${BASH_SOURCE-}" = "$0" ] || [ -z "${BASH_SOURCE-}" ]; then
 fi
 
 #######################################
-# Updates a jenkins plugin to the latest version
+# Updates a JAR to the latest version via Jenkins
 # Globals:
 #	None
 # Arguments:
-#   plugin_json
+#   jar_json
 #######################################
-jenkins_update_plugin() {
-	local plugin_json=$1
-	local plugin_url=$(echo $plugin_json | jq -r '.url' 2>/dev/null)
-	local latest_version=$(curl -s "$plugin_url/lastSuccessfulBuild/buildNumber")
-	local plugin_filename=$(echo $plugin_json | jq -r '.filename' 2>/dev/null)
-	local artifact_number=$(echo $plugin_json | jq -r '.artifactNumber' 2>/dev/null)
-	if [ -z "$plugin_url" ]; then error_handler "Plugin url is empty"; fi
+jenkins_update() {
+	local jar_json=$1
+	local jar_url=$(echo $jar_json | jq -r '.url' 2>/dev/null)
+	local latest_version=$(curl -s "$jar_url/lastSuccessfulBuild/buildNumber")
+	local jar_filename=$(echo $jar_json | jq -r '.filename' 2>/dev/null)
+	local artifact_number=$(echo $jar_json | jq -r '.artifactNumber' 2>/dev/null)
+	if [ -z "$jar_url" ]; then error_handler "JAR url is empty"; fi
 
-	metadata=$(curl -s "$plugin_url/lastSuccessfulBuild/api/json")
+	metadata=$(curl -s "$jar_url/lastSuccessfulBuild/api/json")
 	artifact_path=$(echo "$metadata" | jq --arg artifactNumber "$artifact_number" -r '.artifacts[$artifactNumber | tonumber].relativePath')
 
-	download_url="$plugin_url/lastSuccessfulBuild/artifact/$artifact_path"
+	download_url="$jar_url/lastSuccessfulBuild/artifact/$artifact_path"
 
-	curl -sS -L -o "$plugin_filename" "$download_url"
+	curl -sS -L -o "$jar_filename" "$download_url"
 
 	tmp_file=$(mktemp)
-	jq --arg filename "$plugin_filename" --arg version "$latest_version" 'map(if .filename == $filename then .version = $version else . end)' "$cache_file" >"$tmp_file" && mv "$tmp_file" "$cache_file"
+	jq --arg filename "$jar_filename" --arg version "$latest_version" 'map(if .filename == $filename then .version = $version else . end)' "$cache_file" >"$tmp_file" && mv "$tmp_file" "$cache_file"
 }
 
 #######################################
-# Returns the latest version of a jenkins plugin
+# Returns the latest version of a JAR via Jenkins
 # Globals:
 #	None
 # Arguments:
-#   plugin_json
+#   jar_json
 #######################################
 jenkins_get_version() {
-	local plugin_json=$1
-	local plugin_url=$(echo $plugin_json | jq -r '.url' 2>/dev/null)
-	[ -z "$plugin_url" ] && error_handler "plugin_url is empty" "$0"
-	local jenkins_latest_version=$(curl -s "$plugin_url/lastSuccessfulBuild/buildNumber")
+	local jar_json=$1
+	local jar_url=$(echo $jar_json | jq -r '.url' 2>/dev/null)
+	[ -z "$jar_url" ] && error_handler "JAR url is empty" "$0"
+	local jenkins_latest_version=$(curl -s "$jar_url/lastSuccessfulBuild/buildNumber")
 	[ -z "$jenkins_latest_version" ] && error_handler "Failed to retrieve latest build number"
 
 	echo "$jenkins_latest_version"
