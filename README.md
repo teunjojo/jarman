@@ -6,6 +6,7 @@
 ## Note: This is still in early Beta so it may contain bugs and lack features.
 
 Yet Another Plugin Manager (YAPM) is a Plugin Manager bash script for Bukkit/Spigot/Paper plugins.
+
 This would technically also work for fabric/forge mods since it just downloads jar files.
 
 YAPM is designed to check and download plugin updates from many different sources.
