@@ -2,7 +2,12 @@
 
 [![GitHub Release](https://img.shields.io/github/v/release/teunjojo/yapm?style=for-the-badge)](https://github.com/teunjojo/jarman/releases)
 
-![Compatible with](https://img.shields.io/badge/Compatible_with-gray?style=for-the-badge)
+![Platforms](https://img.shields.io/badge/Supported_platforms-gray?style=for-the-badge)&nbsp;&nbsp;
+![Spigot](https://img.shields.io/badge/Spigot-ED8106?style=for-the-badge&logo=spigotmc&logoColor=fff)&nbsp;
+![Fabric](https://img.shields.io/badge/Fabric-BCB29C?style=for-the-badge)&nbsp;
+![NeoForge](https://img.shields.io/badge/Neo-Forge-bdc7c7?style=for-the-badge&labelColor=d7742f)&nbsp;
+
+![Sources](https://img.shields.io/badge/Supported_Sources-gray?style=for-the-badge)&nbsp;&nbsp;
 [![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=fff)](https://www.jenkins.io/)
 
 ## Note: This is still in early Beta so it may contain bugs and lack features
