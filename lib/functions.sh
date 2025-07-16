@@ -111,6 +111,9 @@ update() {
 	"jenkins")
 		jenkins_update "$jar_data"
 		;;
+	"github-releases")
+		ghr_update "$jar_data"
+		;;
 	"")
 		error_handler "JAR type empty"
 		;;
@@ -133,6 +136,9 @@ get_version() {
 	case "$jar_type" in
 	"jenkins")
 		jenkins_get_version "$jar_data"
+		;;
+	"github-releases")
+		ghr_get_version "$jar_data"
 		;;
 	"")
 		# JAR type not set
