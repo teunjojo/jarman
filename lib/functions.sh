@@ -109,7 +109,7 @@ update() {
 	local jar_type=$(echo $jar_data | jq -r '.type' 2>/dev/null)
 	case "$jar_type" in
 	"jenkins")
-		jenkins-update "$jar_data"
+		jenkins_update "$jar_data"
 		;;
 	"")
 		error_handler "JAR type empty"
