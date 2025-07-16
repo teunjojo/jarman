@@ -1,9 +1,9 @@
 # jarman
 
-![GitHub Release](https://img.shields.io/github/v/release/teunjojo/yapm?style=for-the-badge)
+[![GitHub Release](https://img.shields.io/github/v/release/teunjojo/yapm?style=for-the-badge)](https://github.com/teunjojo/jarman/releases)
 
 ![Compatible with](https://img.shields.io/badge/Compatible_with-gray?style=for-the-badge)
-![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=fff)
+[![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=fff)](https://www.jenkins.io/)
 
 ## Note: This is still in early Beta so it may contain bugs and lack features
 
