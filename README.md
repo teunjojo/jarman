@@ -1,8 +1,10 @@
+# Yet Another Plugin Manager
+
 ![GitHub Release](https://img.shields.io/github/v/release/teunjojo/yapm?style=for-the-badge)
 
 ![Compatible with](https://img.shields.io/badge/Compatible_with-gray?style=for-the-badge)
 ![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=fff)
-# Yet Another Plugin Manager
+
 ## Note: This is still in early Beta so it may contain bugs and lack features.
 
 Yet Another Plugin Manager (YAPM) is a Plugin Manager bash script for Bukkit/Spigot/Paper plugins.
@@ -12,24 +14,31 @@ This would technically also work for fabric/forge mods since it just downloads j
 YAPM is designed to check and download plugin updates from many different sources.
 
 ## Supported sources
+
 ###### Checked sources are currently supported
+
 - [x] Jenkins
 - [ ] Github Releases
 - [ ] SpigotMC
 - [ ] Modrinth
 
 # Installation
+
 ## Method 1 (using git)
-Clone this repository 
-```
+
+Clone this repository
+
+``` console
 git clone https://github.com/teunjojo/yapm.git
 ```
 
 ## Method 2
+
 1. Download this [zip](https://github.com/teunjojo/yapm/archive/refs/heads/main.zip)
 2. Unzip it
 
 ## Usage
+
 This script is portable an can be run from anywhere.
 
 Its recommended to remove versions from your plugin artifacts.
