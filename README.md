@@ -1,3 +1,7 @@
+![GitHub Release](https://img.shields.io/github/v/release/teunjojo/yapm?style=for-the-badge)
+
+![Compatible with](https://img.shields.io/badge/Compatible_with-gray?style=for-the-badge)
+![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=fff)
 # Yet Another Plugin Manager
 ## Note: This is still in early Beta so it may contain bugs and lack features.
 
