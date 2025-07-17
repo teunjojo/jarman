@@ -64,11 +64,26 @@ ghr_get_version() {
 ghr_curl() {
 	local url=$1
 	local response=$(mktemp)
-	local status=$(curl -s -w "%{http_code}" -o "$response" "$url")
+	curl_opts=(-s -w "%{http_code}" -o "$response")
 
-	if [[ "$status" == "403" ]]; then 
-		error_handler "$(cat "$response" | jq '.message')"
+	if [[ -n "$GITHUB_TOKEN" ]]; then
+		curl_opts+=(--header "Authorization: Bearer $GITHUB_TOKEN")
 	fi
+
+	status=$(curl "${curl_opts[@]}" "$url")
+
+	case "$status" in
+	"200")
+		;;
+
+	"403")
+		error_handler "$(cat "$response" | jq '.message')"
+		;;
+
+	"404")
+		error_handler "Not Found"
+		;;
+	esac
 
 	cat "$response" | jq .
 	rm "$response"
