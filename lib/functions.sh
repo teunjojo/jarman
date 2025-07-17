@@ -69,7 +69,13 @@ register_jar() {
 			break
 		fi
 		if [[ -z $REPLY || $REPLY =~ ^[Yy]$ ]]; then # If 'Y', 'y' or empty, then ask for user input
-			read -p "What is the JAR file update type? [jenkins]: " type
+			echo "Available sources: "
+			sources=("jenkins")
+			for i in "${!sources[@]}"; do
+				echo -e " $i) ${sources[$i]}"
+			done
+			read -p "Select the number of the source: [0]: " type_number
+			type="${sources[$type_number]}"
 			if [ "$type" == "jenkins" ]; then
 				read -p "What is the update URL? [<Jenkins URL>/job/<Project>]: " url
 				local metadata=$(curl -s "$url/lastSuccessfulBuild/api/json")
