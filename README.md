@@ -10,6 +10,7 @@
 ![Sources](https://img.shields.io/badge/Supported_Sources-gray?style=for-the-badge)&nbsp;&nbsp;
 [![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=fff)](https://www.jenkins.io/)
 [![GitHub Releases](https://img.shields.io/badge/Github_Releases-181717?style=for-the-badge&logo=github&logoColor=fff)](https://docs.github.com/en/repositories/releasing-projects-on-github)
+[![GitHub Releases](https://img.shields.io/badge/Modrinth-00AF5C?style=for-the-badge&logo=modrinth&logoColor=fff)](https://modrinth.com/)
 
 ## Note: This is still in early Beta so it may contain bugs and lack features
 
@@ -25,7 +26,7 @@ Unchecked sources are planned to be supported in the future.
 
 - [x] Jenkins
 - [x] Github Releases
-- [ ] Modrinth
+- [x] Modrinth
 - [ ] SpigotMC
 
 ## Installation
