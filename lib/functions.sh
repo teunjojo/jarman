@@ -11,6 +11,7 @@ root_dir="$(dirname "${BASH_SOURCE[1]}")"
 #
 [ ! -d "$root_dir/lib" ] && error_handler "Directory '$root_dir' not found"
 source "$root_dir/lib/jenkins.sh" || error_handler "Failed to source '$root_dir/lib/jenkins.sh'"
+source "$root_dir/lib/github-releases.sh" || error_handler "Failed to source '$root_dir/lib/github-releases.sh'"
 
 #######################################
 # Function that prints the script usage
@@ -54,6 +55,7 @@ register_jar() {
 
 	local type=""
 	local url=""
+	local repo=""
 	local artifact=""
 	local artifact_number=""
 
@@ -86,6 +88,16 @@ register_jar() {
 				done
 				read -p "Select the number of the artifact: [0]: " artifact_number
 			fi
+			if [ "$type" == "github-releases" ]; then
+				read -p "What is the name of the GitHub releases? [<User>/<Repository>]: " repo
+				local metadata=$(ghr_curl "https://api.github.com/repos/$repo/releases/latest")
+				readarray artifacts < <(echo "$metadata" | jq -r '.assets[].name')
+				echo "Available artifacts: "
+				for i in "${!artifacts[@]}"; do
+					echo -ne " $i) ${artifacts[$i]}"
+				done
+				read -p "Select the number of the artifact: [0]: " artifact_number
+			fi
 			break
 		fi
 	done
@@ -94,9 +106,10 @@ register_jar() {
 		--arg filename "$jar_filename" \
 		--arg type "$type" \
 		--arg url "$url" \
+		--arg repo "$repo" \
 		--arg version "unknown" \
 		--arg artifactNumber "$artifact_number" \
-		'{filename: $filename, type: $type, url: $url, version: $version, artifactNumber: $artifactNumber}')
+		'{filename: $filename, type: $type, url: $url, repo: $repo, version: $version, artifactNumber: $artifactNumber}')
 
 	tmp_file=$(mktemp)
 	jq --argjson new_jar "$new_jar" '. + [$new_jar]' $cache_file >"$tmp_file" && mv "$tmp_file" "$cache_file"
@@ -116,6 +129,9 @@ update() {
 	case "$jar_type" in
 	"jenkins")
 		jenkins_update "$jar_data"
+		;;
+	"github-releases")
+		ghr_update "$jar_data"
 		;;
 	"")
 		error_handler "JAR type empty"
@@ -139,6 +155,9 @@ get_version() {
 	case "$jar_type" in
 	"jenkins")
 		jenkins_get_version "$jar_data"
+		;;
+	"github-releases")
+		ghr_get_version "$jar_data"
 		;;
 	"")
 		# JAR type not set

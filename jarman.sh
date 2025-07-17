@@ -9,6 +9,8 @@
 # Script parameters
 #
 
+# GitHub API authentication (This is not necessary, but will prevent the script from exceeding the API rate limit)
+GITHUB_TOKEN=""
 # The cache file used to remember JAR file data
 cache_file=".cache.json"
 # If error outputs should be more verbose
