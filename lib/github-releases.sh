@@ -12,7 +12,7 @@ fi
 #   jar_json
 #######################################
 ghr_update() {
-    # TODO: Implement logic for downloading latest release
+	# TODO: Implement logic for downloading latest release
 	local jar_json=$1
 	local jar_url=$(echo $jar_json | jq -r '.url' 2>/dev/null)
 	local latest_version=$(ghr_latest_version $jar_json)
@@ -36,15 +36,13 @@ ghr_update() {
 #   jar_json
 #######################################
 ghr_get_version() {
-    # TODO: Implement logic for getting latest release tag 
-    exit 3 # Exit with unknown because its not yet implemented
 	local jar_json=$1
-	local jar_url=$(echo $jar_json | jq -r '.url' 2>/dev/null)
-	[ -z "$jar_url" ] && error_handler "JAR url is empty" "$0"
+	local jar_repo=$(echo $jar_json | jq -r '.repo' 2>/dev/null)
+	[ -z "$jar_repo" ] && error_handler "JAR GitHub repository is not set" "$0"
 
-	local ghr_latest_version=""
-    
-	[ -z "$ghr_latest_version" ] && error_handler "Failed to retrieve latest build number"
+	local ghr_latest_version=$(curl -s "https://api.github.com/repos/$jar_repo/releases/latest" | jq -r .tag_name)
+
+	[ -z "$ghr_latest_version" ] && error_handler "Failed to retrieve latest release tag_name"
 
 	echo "$ghr_latest_version"
 }
