@@ -54,10 +54,6 @@ modrinth_curl() {
 	local response=$(mktemp)
 	curl_opts=(-s -w "%{http_code}" -o "$response")
 
-	if [[ -n "$GITHUB_TOKEN" ]]; then
-		curl_opts+=(--header "Authorization: Bearer $GITHUB_TOKEN")
-	fi
-
 	status=$(curl "${curl_opts[@]}" "$url")
 
 	case "$status" in
