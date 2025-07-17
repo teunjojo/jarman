@@ -78,7 +78,8 @@ register_jar() {
 			done
 			read -p "Select the number of the source: [0]: " source_index
 			source="${sources[$source_index]}"
-			if [ "$source" == "jenkins" ]; then
+			case "$source" in
+			"jenkins")
 				read -p "What is the update URL? [<Jenkins URL>/job/<Project>]: " url
 				local metadata=$(curl -s "$url/lastSuccessfulBuild/api/json")
 				readarray artifacts < <(echo "$metadata" | jq -r '.artifacts[].displayPath')
@@ -87,9 +88,9 @@ register_jar() {
 					echo -ne " $i) ${artifacts[$i]}"
 				done
 				read -p "Select the number of the artifact: [0]: " artifact_number
-			fi
-			if [ "$source" == "github-releases" ]; then
-				read -p "What is the name of the GitHub releases? [<User>/<Repository>]: " repo
+				;;
+			"github-releases")
+				read -p "What is the name of the GitHub repo? [<User>/<Repository>]: " repo
 				local metadata=$(ghr_curl "https://api.github.com/repos/$repo/releases/latest")
 				readarray artifacts < <(echo "$metadata" | jq -r '.assets[].name')
 				echo "Available artifacts: "
@@ -97,7 +98,8 @@ register_jar() {
 					echo -ne " $i) ${artifacts[$i]}"
 				done
 				read -p "Select the number of the artifact: [0]: " artifact_number
-			fi
+				;;
+			esac
 			break
 		fi
 	done
