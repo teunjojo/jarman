@@ -53,7 +53,7 @@ get_data() {
 register_jar() {
 	local jar_filename=$1
 
-	local type=""
+	local source=""
 	local url=""
 	local repo=""
 	local artifact=""
@@ -76,9 +76,9 @@ register_jar() {
 			for i in "${!sources[@]}"; do
 				echo -e " $i) ${sources[$i]}"
 			done
-			read -p "Select the number of the source: [0]: " type_number
-			type="${sources[$type_number]}"
-			if [ "$type" == "jenkins" ]; then
+			read -p "Select the number of the source: [0]: " source_index
+			source="${sources[$source_index]}"
+			if [ "$source" == "jenkins" ]; then
 				read -p "What is the update URL? [<Jenkins URL>/job/<Project>]: " url
 				local metadata=$(curl -s "$url/lastSuccessfulBuild/api/json")
 				readarray artifacts < <(echo "$metadata" | jq -r '.artifacts[].displayPath')
@@ -88,7 +88,7 @@ register_jar() {
 				done
 				read -p "Select the number of the artifact: [0]: " artifact_number
 			fi
-			if [ "$type" == "github-releases" ]; then
+			if [ "$source" == "github-releases" ]; then
 				read -p "What is the name of the GitHub releases? [<User>/<Repository>]: " repo
 				local metadata=$(ghr_curl "https://api.github.com/repos/$repo/releases/latest")
 				readarray artifacts < <(echo "$metadata" | jq -r '.assets[].name')
@@ -104,12 +104,12 @@ register_jar() {
 
 	local new_jar=$(jq -n \
 		--arg filename "$jar_filename" \
-		--arg type "$type" \
+		--arg source "$source" \
 		--arg url "$url" \
 		--arg repo "$repo" \
 		--arg version "unknown" \
 		--arg artifactNumber "$artifact_number" \
-		'{filename: $filename, type: $type, url: $url, repo: $repo, version: $version, artifactNumber: $artifactNumber}')
+		'{filename: $filename, source: $source, url: $url, repo: $repo, version: $version, artifactNumber: $artifactNumber}')
 
 	tmp_file=$(mktemp)
 	jq --argjson new_jar "$new_jar" '. + [$new_jar]' $cache_file >"$tmp_file" && mv "$tmp_file" "$cache_file"
@@ -125,8 +125,8 @@ register_jar() {
 #######################################
 update() {
 	local jar_data=$1
-	local jar_type=$(echo $jar_data | jq -r '.type' 2>/dev/null)
-	case "$jar_type" in
+	local jar_source=$(echo $jar_data | jq -r '.source' 2>/dev/null)
+	case "$jar_source" in
 	"jenkins")
 		jenkins_update "$jar_data"
 		;;
@@ -134,10 +134,10 @@ update() {
 		ghr_update "$jar_data"
 		;;
 	"")
-		error_handler "JAR type empty"
+		error_handler "JAR source not set"
 		;;
 	*)
-		error_handler "JAR type '$jar_type' unknown"
+		error_handler "JAR source '$jar_source' unknown"
 		;;
 	esac
 }
@@ -151,8 +151,8 @@ update() {
 #######################################
 get_version() {
 	local jar_data=$1
-	local jar_type=$(echo $jar_data | jq -r '.type' 2>/dev/null)
-	case "$jar_type" in
+	local jar_source=$(echo $jar_data | jq -r '.source' 2>/dev/null)
+	case "$jar_source" in
 	"jenkins")
 		jenkins_get_version "$jar_data"
 		;;
@@ -160,11 +160,11 @@ get_version() {
 		ghr_get_version "$jar_data"
 		;;
 	"")
-		# JAR type not set
+		# JAR source not set
 		exit 2
 		;;
 	*)
-		# Unknown JAR type
+		# Unknown JAR source
 		exit 3
 		;;
 	esac

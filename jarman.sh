@@ -144,7 +144,7 @@ main() {
 		echo -ne " - $jar_file "
 
 		# Prepare to get jar status
-		jar_type=$(echo $jar_data | jq -r '.type' 2>/dev/null)
+		jar_source=$(echo $jar_data | jq -r '.source' 2>/dev/null)
 		jar_version=$(echo $jar_data | jq -r '.version' 2>/dev/null)
 
 		# Get the latest version of the JAR file
@@ -154,13 +154,13 @@ main() {
 
 		if [[ $latest_version_exitcode != 0 ]]; then
 			if [[ $latest_version_exitcode == 2 ]]; then
-				# JAR type not set, print status as unmanaged and continue to next JAR file
+				# JAR source not set, print status as unmanaged and continue to next JAR file
 				echo -e "\033[1;34m[Unmanaged]\033[0m\033[0m"
 				continue
 			fi
 			if [[ $latest_version_exitcode == 3 ]]; then
-				# JAR type not known, throw error
-				echo -e "\033[1;31m[Unknown Type]\033[0m\033[2;37m ($jar_version)\033[0m"
+				# JAR source not known, throw error
+				echo -e "\033[1;31m[Unknown Source]\033[0m\033[2;37m ($jar_version)\033[0m"
 				continue
 			fi
 			# Unknown error, throw error
