@@ -55,6 +55,7 @@ register_jar() {
 
 	local type=""
 	local url=""
+	local repo=""
 	local artifact=""
 	local artifact_number=""
 
@@ -81,6 +82,9 @@ register_jar() {
 				done
 				read -p "Select the number of the artifact: [0]: " artifact_number
 			fi
+			if [ "$type" == "github-releases" ]; then
+				read -p "What is the name of the GitHub releases? [<User>/<Repository>]: " repo
+			fi
 			break
 		fi
 	done
@@ -89,9 +93,10 @@ register_jar() {
 		--arg filename "$jar_filename" \
 		--arg type "$type" \
 		--arg url "$url" \
+		--arg repo "$repo" \
 		--arg version "unknown" \
 		--arg artifactNumber "$artifact_number" \
-		'{filename: $filename, type: $type, url: $url, version: $version, artifactNumber: $artifactNumber}')
+		'{filename: $filename, type: $type, url: $url, repo: $repo, version: $version, artifactNumber: $artifactNumber}')
 
 	tmp_file=$(mktemp)
 	jq --argjson new_jar "$new_jar" '. + [$new_jar]' $cache_file >"$tmp_file" && mv "$tmp_file" "$cache_file"
