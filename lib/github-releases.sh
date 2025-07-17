@@ -12,15 +12,23 @@ fi
 #   jar_json
 #######################################
 ghr_update() {
-	# TODO: Implement logic for downloading latest release
 	local jar_json=$1
-	local jar_url=$(echo $jar_json | jq -r '.url' 2>/dev/null)
-	local latest_version=$(ghr_latest_version $jar_json)
+	local jar_repo=$(echo $jar_json | jq -r '.repo' 2>/dev/null)
+	local latest_version=$(ghr_get_version "$jar_json")
 	local jar_filename=$(echo $jar_json | jq -r '.filename' 2>/dev/null)
 	local artifact_number=$(echo $jar_json | jq -r '.artifactNumber' 2>/dev/null)
-	if [ -z "$jar_url" ]; then error_handler "JAR url is empty"; fi
+	[ -z "$artifact_number" ] && error_handler "artifact_number not set"
+	if [ -z "$jar_repo" ]; then error_handler "JAR GitHub repository is not set"; fi
 
-	download_url=""
+	local metadata="$(ghr_curl "https://api.github.com/repos/$jar_repo/releases/latest")"
+
+	[ -z "$metadata" ] && error_handler "Failed to retrieve metadata for latest release of '$jar_repo'"
+
+	local assets_url=$(echo $metadata | jq -r ".assets_url")
+
+	[ -z "assets_url" ] && error_handler "Failed to retrieve assets_url"
+
+	local download_url="$(ghr_curl "$assets_url" | jq -r --arg artifactNumber $artifact_number '.[$artifactNumber|tonumber].browser_download_url')"
 
 	curl -sS -L -o "$jar_filename" "$download_url"
 
@@ -40,8 +48,7 @@ ghr_get_version() {
 	local jar_repo=$(echo $jar_json | jq -r '.repo' 2>/dev/null)
 	[ -z "$jar_repo" ] && error_handler "JAR GitHub repository is not set" "$0"
 
-	local ghr_latest_version=$(curl -s "https://api.github.com/repos/$jar_repo/releases/latest" | jq -r .tag_name)
-
+	local ghr_latest_version=$(ghr_curl "https://api.github.com/repos/$jar_repo/releases/latest" | jq -r .tag_name)
 	[ -z "$ghr_latest_version" ] && error_handler "Failed to retrieve latest release tag_name"
 
 	echo "$ghr_latest_version"
