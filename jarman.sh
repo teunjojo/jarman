@@ -39,7 +39,7 @@ root_dir="$(dirname "$0")"
 # Error Handling
 pid=$$
 trap 'error_handler "Unknown error occured while trying to execute: ${BASH_COMMAND}"' ERR
-trap 'echo -e "\e[33mExited unexpectedly.\nIf you think this is a bug, report it at the following link: https://github.com/teunjojo/yapm/issues\e[0m";exit' SIGTERM
+trap 'echo -e "\e[33mExited unexpectedly.\nIf you think this is a bug, report it at the following link: https://github.com/teunjojo/jarman/issues\e[0m";exit' SIGTERM
 
 #######################################
 # Function that handles errors
