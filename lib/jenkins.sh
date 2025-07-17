@@ -14,7 +14,7 @@ fi
 jenkins_update() {
 	local jar_json=$1
 	local jar_url=$(echo $jar_json | jq -r '.url' 2>/dev/null)
-	local latest_version=$(curl -s "$jar_url/lastSuccessfulBuild/buildNumber")
+	local latest_version=$(jenkins_get_version "$jar_json")
 	local jar_filename=$(echo $jar_json | jq -r '.filename' 2>/dev/null)
 	local artifact_number=$(echo $jar_json | jq -r '.artifactNumber' 2>/dev/null)
 	if [ -z "$jar_url" ]; then error_handler "JAR url is empty"; fi
