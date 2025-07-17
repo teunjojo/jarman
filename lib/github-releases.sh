@@ -46,3 +46,23 @@ ghr_get_version() {
 
 	echo "$ghr_latest_version"
 }
+
+#######################################
+# Curl for GitHub Releases API
+# Globals:
+#	None
+# Arguments:
+#   jar_json
+#######################################
+ghr_curl() {
+	local url=$1
+	local response=$(mktemp)
+	local status=$(curl -s -w "%{http_code}" -o "$response" "$url")
+
+	if [[ "$status" == "403" ]]; then 
+		error_handler "$(cat "$response" | jq '.message')"
+	fi
+
+	cat "$response" | jq .
+	rm "$response"
+}
