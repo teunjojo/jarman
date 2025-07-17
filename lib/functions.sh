@@ -163,6 +163,9 @@ get_version() {
 	"github-releases")
 		ghr_get_version "$jar_data"
 		;;
+	"modrinth")
+		modrinth_get_version "$jar_data"
+		;;
 	"")
 		# JAR source not set
 		exit 2
