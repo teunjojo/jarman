@@ -72,7 +72,7 @@ register_jar() {
 		fi
 		if [[ -z $REPLY || $REPLY =~ ^[Yy]$ ]]; then # If 'Y', 'y' or empty, then ask for user input
 			echo "Available sources: "
-			sources=("jenkins" "github-releases")
+			sources=("jenkins" "github-releases" "modrinth")
 			for i in "${!sources[@]}"; do
 				echo -e " $i) ${sources[$i]}"
 			done
