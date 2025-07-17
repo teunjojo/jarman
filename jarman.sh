@@ -12,7 +12,7 @@
 # The cache file used to remember JAR file data
 cache_file=".cache.json"
 # If error outputs should be more verbose
-DEBUG=false
+DEBUG=true
 
 #
 #! Don't touch anything below this line!
@@ -51,8 +51,8 @@ error_handler() {
 	# If not DEBUG, print error like the following:
 	# <file>: <msg>
 	[[ "$DEBUG" == "false" ]] && echo -e "\033[1G\033[0m\e[31m$file: $msg\e[0m" >&2 && exit 1
-	local lineno="${BASH_LINENO[$((level - 1))]}"
-	local func="${FUNCNAME[$level]}"
+	local lineno="${BASH_LINENO[1]}"
+	local func="${FUNCNAME[2]}"
 	# If DEBUG, print error like the following:
 	# <file>: line <lineno>: (<func>): <msg>
 	echo -e "\033[1G\033[0m\e[31m$file: line $lineno: ($func)${msg:+:\e[1;31m $msg}\e[0m" >&2
