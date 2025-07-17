@@ -35,8 +35,9 @@ root_dir="$(dirname "$0")"
 [ -z "$BASH_VERSION" ] && echo "This script requires bash to run." && exit 1
 
 # Error Handling
+pid=$$
 trap 'error_handler "Unknown error occured while trying to execute: ${BASH_COMMAND}"' ERR
-trap 'exitcode=$?; if [ $exitcode -eq 1 ]; then echo -e "\e[33mExited with code 1.\nIf you think this is a bug, report it at the following link: https://github.com/teunjojo/yapm/issues\e[0m"; fi' EXIT
+trap 'echo -e "\e[33mExited unexpectedly.\nIf you think this is a bug, report it at the following link: https://github.com/teunjojo/yapm/issues\e[0m";exit' SIGTERM
 
 #######################################
 # Function that handles errors
@@ -50,13 +51,16 @@ error_handler() {
 	local file="${BASH_SOURCE[1]}"
 	# If not DEBUG, print error like the following:
 	# <file>: <msg>
-	[[ "$DEBUG" == "false" ]] && echo -e "\033[1G\033[0m\e[31m$file: $msg\e[0m" >&2 && exit 1
-	local lineno="${BASH_LINENO[1]}"
-	local func="${FUNCNAME[2]}"
-	# If DEBUG, print error like the following:
-	# <file>: line <lineno>: (<func>): <msg>
-	echo -e "\033[1G\033[0m\e[31m$file: line $lineno: ($func)${msg:+:\e[1;31m $msg}\e[0m" >&2
-	exit 1
+	if [[ "$DEBUG" == "false" ]]; then
+		echo -e "\033[1G\033[0m\e[31m$file: $msg\e[0m" >&2
+	else
+		local lineno="${BASH_LINENO[1]}"
+		local func="${FUNCNAME[2]}"
+		# If DEBUG, print error like the following:
+		# <file>: line <lineno>: (<func>): <msg>
+		echo -e "\033[1G\033[0m\e[31m$file: line $lineno: ($func)${msg:+:\e[1;31m $msg}\e[0m" >&2
+	fi
+	kill $pid
 }
 
 # Check if DEBUG variable is set correctly
