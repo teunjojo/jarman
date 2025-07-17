@@ -100,19 +100,33 @@ register_jar() {
 				done
 				read -p "Select the number of the artifact: [0]: " artifact_number
 				;;
+			"modrinth")
+				read -p "What is the name of the project? [id|slug]: " project
+				local metadata=$(modrinth_curl "https://api.modrinth.com/v2/project/$project")
+				echo "Select the correct loader: "
+				readarray loaders < <(echo "$metadata" | jq -r '.loaders[]')
+				for i in "${!loaders[@]}"; do
+					echo -ne " $i) ${loaders[$i]}"
+				done
+				read -p "Select the number of the loader: [0]: " loader_index
+				loader="$(echo "$metadata" | jq -r --arg index $loader_index '.loaders[$index|tonumber]')"
+				;;
 			esac
 			break
 		fi
 	done
 
-	local new_jar=$(jq -n \
-		--arg filename "$jar_filename" \
-		--arg source "$source" \
-		--arg url "$url" \
-		--arg repo "$repo" \
-		--arg version "unknown" \
-		--arg artifactNumber "$artifact_number" \
-		'{filename: $filename, source: $source, url: $url, repo: $repo, version: $version, artifactNumber: $artifactNumber}')
+	local new_jar=$(
+		jq -n \
+			--arg filename "$jar_filename" \
+			--arg source "$source" \
+			--arg url "$url" \
+			--arg repo "$repo" \
+			--arg version "unknown" \
+			--arg artifactNumber "$artifact_number" \
+			--arg loader "$loader" \
+		'{filename: $filename, source: $source, url: $url, repo: $repo, version: $version, artifactNumber: $artifactNumber, loader: $loader}'
+	)
 
 	tmp_file=$(mktemp)
 	jq --argjson new_jar "$new_jar" '. + [$new_jar]' $cache_file >"$tmp_file" && mv "$tmp_file" "$cache_file"
