@@ -84,6 +84,13 @@ register_jar() {
 			fi
 			if [ "$type" == "github-releases" ]; then
 				read -p "What is the name of the GitHub releases? [<User>/<Repository>]: " repo
+				local metadata=$(curl -s "https://api.github.com/repos/$repo/releases/latest")
+				readarray artifacts < <(echo "$metadata" | jq -r '.assets[].name')
+				echo "Available artifacts: "
+				for i in "${!artifacts[@]}"; do
+					echo -ne " $i) ${artifacts[$i]}"
+				done
+				read -p "Select the number of the artifact: [0]: " artifact_number
 			fi
 			break
 		fi
