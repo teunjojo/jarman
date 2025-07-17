@@ -12,6 +12,7 @@ root_dir="$(dirname "${BASH_SOURCE[1]}")"
 [ ! -d "$root_dir/lib" ] && error_handler "Directory '$root_dir' not found"
 source "$root_dir/lib/jenkins.sh" || error_handler "Failed to source '$root_dir/lib/jenkins.sh'"
 source "$root_dir/lib/github-releases.sh" || error_handler "Failed to source '$root_dir/lib/github-releases.sh'"
+source "$root_dir/lib/modrinth.sh" || error_handler "Failed to source '$root_dir/lib/modrinth.sh'"
 
 #######################################
 # Function that prints the script usage
@@ -132,6 +133,9 @@ update() {
 		;;
 	"github-releases")
 		ghr_update "$jar_data"
+		;;
+	"modrinth")
+		modrinth_update "$jar_data"
 		;;
 	"")
 		error_handler "JAR source not set"
