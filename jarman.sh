@@ -112,6 +112,7 @@ main() {
 	[ ! -f "$cache_file" ] && echo [] >$cache_file
 
 	# Get exising JAR files from directory
+	shopt -s nullglob # So it returns empty when no matchces
 	local jar_files=(*.jar)
 	if [ ${#jar_files[@]} -eq 0 ]; then
 		echo "No JAR files found in '$working_directory'"
