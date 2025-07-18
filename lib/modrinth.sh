@@ -33,10 +33,17 @@ modrinth_update() {
 #   jar_json
 #######################################
 modrinth_get_version() {
-	# TODO: Implement logic for retrieving latest version number of a project
 	local jar_json=$1
+	local jar_loader=$(echo "$jar_json" | jq -r '.loader')
+	[ -z "$jar_loader" ] && error_handler "JAR loader not set"
+	local jar_project=$(echo "$jar_json" | jq -r '.project')
+	[ -z "$jar_project" ] && error_handler "JAR project not set"
 
-	local modrinth_latest_version=""
+	echo "https://api.modrinth.com/v2/project/$jar_project/version?loaders=loader=%5B%22$jar_loader%22%5D" > /dev/tty
+
+	metadata="$(modrinth_curl "https://api.modrinth.com/v2/project/$jar_project/version?loaders=loader=%5B%22$jar_loader%22%5D")"
+
+	local modrinth_latest_version="$(echo "$metadata" | jq -r '.[0].version_number')"
 	[ -z "$modrinth_latest_version" ] && error_handler "Failed to retrieve latest version number"
 
 	echo "$modrinth_latest_version"
@@ -57,8 +64,7 @@ modrinth_curl() {
 	status=$(curl "${curl_opts[@]}" "$url")
 
 	case "$status" in
-	"200")
-		;;
+	"200") ;;
 
 	"403")
 		error_handler "$(cat "$response" | jq '.message')"
