@@ -25,7 +25,7 @@ DEBUG=true
 #
 
 # Version of the script
-version="0.3"
+version="0.4"
 
 # Line used for seperating
 seperator="----------------------------------------"
