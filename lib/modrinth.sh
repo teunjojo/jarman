@@ -14,10 +14,15 @@ fi
 modrinth_update() {
 	# TODO: Implement logic for downloading latest version JAR of a project
 	local jar_json=$1
-	local latest_version=$(modrinth_get_version "$jar_json")
+	local jar_loader=$(echo "$jar_json" | jq -r '.loader')
+	[ -z "$jar_loader" ] && error_handler "JAR loader not set"
+	local jar_project=$(echo "$jar_json" | jq -r '.project')
+	[ -z "$jar_project" ] && error_handler "JAR project not set"
 	local jar_filename=$(echo $jar_json | jq -r '.filename' 2>/dev/null)
 
-	local download_url=""
+	metadata="$(modrinth_curl "https://api.modrinth.com/v2/project/$jar_project/version?loaders=loader=%5B%22$jar_loader%22%5D")"
+
+	local download_url="$(echo "$metadata" | jq -r '.[0].files[0].url')"
 
 	curl -sS -L -o "$jar_filename" "$download_url"
 
@@ -38,8 +43,6 @@ modrinth_get_version() {
 	[ -z "$jar_loader" ] && error_handler "JAR loader not set"
 	local jar_project=$(echo "$jar_json" | jq -r '.project')
 	[ -z "$jar_project" ] && error_handler "JAR project not set"
-
-	echo "https://api.modrinth.com/v2/project/$jar_project/version?loaders=loader=%5B%22$jar_loader%22%5D" > /dev/tty
 
 	metadata="$(modrinth_curl "https://api.modrinth.com/v2/project/$jar_project/version?loaders=loader=%5B%22$jar_loader%22%5D")"
 
