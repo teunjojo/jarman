@@ -1,6 +1,7 @@
 # jarman
 
 [![GitHub Release](https://img.shields.io/github/v/release/teunjojo/jarman?style=for-the-badge)](https://github.com/teunjojo/jarman/releases)
+[![GitHub commits since latest release](https://img.shields.io/github/commits-since/teunjojo/jarman/latest?style=for-the-badge)](https://github.com/teunjojo/jarman/commits)
 
 ![Sources](https://img.shields.io/badge/Supported_Sources-gray?style=for-the-badge)&nbsp;&nbsp;
 [![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=fff)](https://www.jenkins.io/)
