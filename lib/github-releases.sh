@@ -24,7 +24,7 @@ ghr_update() {
 
 	[ -z "$metadata" ] && error_handler "Failed to retrieve metadata for latest release of '$jar_repo'"
 
-	local assets_url=$(echo $metadata | jq -r ".assets_url")
+	local assets_url=$(echo "$metadata" | jq -r ".assets_url")
 
 	[ -z "assets_url" ] && error_handler "Failed to retrieve assets_url"
 
