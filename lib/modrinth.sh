@@ -45,7 +45,7 @@ modrinth_get_version() {
 	local jar_project=$(echo "$jar_json" | jq -r '.project')
 	[ -z "$jar_project" ] && error_handler "JAR project not set"
 
-	metadata="$(modrinth_curl "https://api.modrinth.com/v2/project/$jar_project/version?loaders=loader=%5B%22$jar_loader%22%5D")"
+	metadata="$(modrinth_curl "https://api.modrinth.com/v2/project/$jar_project/version?loaders=%5B%22$jar_loader%22%5D")"
 
 	local modrinth_latest_version="$(echo "$metadata" | jq -r '.[0].version_number')"
 	[ -z "$modrinth_latest_version" ] && error_handler "Failed to retrieve latest version number"
