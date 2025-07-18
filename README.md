@@ -1,16 +1,16 @@
 # jarman
 
-[![GitHub Release](https://img.shields.io/github/v/release/teunjojo/yapm?style=for-the-badge)](https://github.com/teunjojo/jarman/releases)
-
-![Loaders](https://img.shields.io/badge/Supported_loaders-gray?style=for-the-badge)&nbsp;&nbsp;
-![Spigot](https://img.shields.io/badge/Spigot-ED8106?style=for-the-badge&logo=spigotmc&logoColor=fff)&nbsp;
-![Fabric](https://img.shields.io/badge/Fabric-BCB29C?style=for-the-badge)&nbsp;
-![NeoForge](https://img.shields.io/badge/Neo-Forge-bdc7c7?style=for-the-badge&labelColor=d7742f)&nbsp;
+[![GitHub Release](https://img.shields.io/github/v/release/teunjojo/jarman?style=for-the-badge)](https://github.com/teunjojo/jarman/releases)
 
 ![Sources](https://img.shields.io/badge/Supported_Sources-gray?style=for-the-badge)&nbsp;&nbsp;
 [![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=fff)](https://www.jenkins.io/)
-[![GitHub Releases](https://img.shields.io/badge/Github_Releases-181717?style=for-the-badge&logo=github&logoColor=fff)](https://docs.github.com/en/repositories/releasing-projects-on-github)
+[![GitHub Releases](https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=github&logoColor=fff)](https://docs.github.com/en/repositories/releasing-projects-on-github)
 [![GitHub Releases](https://img.shields.io/badge/Modrinth-00AF5C?style=for-the-badge&logo=modrinth&logoColor=fff)](https://modrinth.com/)
+
+![Loaders](https://img.shields.io/badge/Supported_loaders-gray?style=for-the-badge)&nbsp;&nbsp;
+[![Spigot](https://img.shields.io/badge/Spigot-ED8106?style=for-the-badge&logo=spigotmc&logoColor=fff)](https://www.spigotmc.org/)
+[![Fabric](https://img.shields.io/badge/Fabric-BCB29C?style=for-the-badge&logo=fabricmc&logoColor=333)](https://fabricmc.net/)
+[![NeoForge](https://img.shields.io/badge/NeoForge-d7742f?style=for-the-badge&logo=neoforge&logoColor=fff)](https://neoforged.net/)
 
 ## Note: This is still in early Beta so it may contain bugs and lack features
 
