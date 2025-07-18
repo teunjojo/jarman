@@ -2,7 +2,7 @@
 
 [![GitHub Release](https://img.shields.io/github/v/release/teunjojo/yapm?style=for-the-badge)](https://github.com/teunjojo/jarman/releases)
 
-![Platforms](https://img.shields.io/badge/Supported_platforms-gray?style=for-the-badge)&nbsp;&nbsp;
+![Loaders](https://img.shields.io/badge/Supported_loaders-gray?style=for-the-badge)&nbsp;&nbsp;
 ![Spigot](https://img.shields.io/badge/Spigot-ED8106?style=for-the-badge&logo=spigotmc&logoColor=fff)&nbsp;
 ![Fabric](https://img.shields.io/badge/Fabric-BCB29C?style=for-the-badge)&nbsp;
 ![NeoForge](https://img.shields.io/badge/Neo-Forge-bdc7c7?style=for-the-badge&labelColor=d7742f)&nbsp;
