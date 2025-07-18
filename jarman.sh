@@ -189,7 +189,11 @@ main() {
 		echo " [${jar_file}] ${outdated_jars[$jar_file]}"
 	done
 
+	# Default input
+	local exclude_numbers=""
 	read -p "JAR files to EXCLUDE from update (separated by space) [eg: \"0 1\"]: " exclude_numbers
+	# Validate user input
+	[[ ! "$exclude_numbers" =~ ^([0-9]+( [0-9]+)*)?$ ]] && error_handler "Invalid input!"
 
 	jar_files_to_update=("${outdated_jars[@]}")
 
