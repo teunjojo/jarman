@@ -19,10 +19,11 @@ modrinth_update() {
 	local jar_project=$(echo "$jar_json" | jq -r '.project')
 	[ -z "$jar_project" ] && error_handler "JAR project not set"
 	local jar_filename=$(echo $jar_json | jq -r '.filename' 2>/dev/null)
+	local artifact_number=$(echo $jar_json | jq -r '.artifactNumber' 2>/dev/null)
 
 	metadata="$(modrinth_curl "https://api.modrinth.com/v2/project/$jar_project/version?loaders=loader=%5B%22$jar_loader%22%5D")"
 
-	local download_url="$(echo "$metadata" | jq -r '.[0].files[0].url')"
+	local download_url="$(echo "$metadata" | jq -r --arg artifactNumber "$artifact_number" '.[0].files[$artifactNumber|tonumber].url')"
 
 	curl -sS -L -o "$jar_filename" "$download_url"
 

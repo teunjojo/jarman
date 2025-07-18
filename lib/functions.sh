@@ -110,6 +110,13 @@ register_jar() {
 				done
 				read -p "Select the number of the loader: [0]: " loader_index
 				loader="$(echo "$metadata" | jq -r --arg index $loader_index '.loaders[$index|tonumber]')"
+				local version_metadata="$(modrinth_curl "https://api.modrinth.com/v2/project/$project/version?loaders=loader=%5B%22$loader%22%5D")"
+				echo "Select the correct file: "
+				readarray files < <(echo "$version_metadata" | jq -r '.[0].files.[].filename')
+				for i in "${!files[@]}"; do
+					echo -ne " $i) ${files[$i]}"
+				done
+				read -p "Select the number of the file: [0]: " artifact_number
 				;;
 			esac
 			break
@@ -126,7 +133,7 @@ register_jar() {
 			--arg artifactNumber "$artifact_number" \
 			--arg project "$project" \
 			--arg loader "$loader" \
-		'{filename: $filename, source: $source, url: $url, repo: $repo, version: $version, artifactNumber: $artifactNumber, loader: $loader, project: $project}'
+			'{filename: $filename, source: $source, url: $url, repo: $repo, version: $version, artifactNumber: $artifactNumber, loader: $loader, project: $project}'
 	)
 
 	tmp_file=$(mktemp)
