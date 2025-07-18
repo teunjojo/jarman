@@ -124,8 +124,9 @@ register_jar() {
 			--arg repo "$repo" \
 			--arg version "unknown" \
 			--arg artifactNumber "$artifact_number" \
+			--arg project "$project" \
 			--arg loader "$loader" \
-		'{filename: $filename, source: $source, url: $url, repo: $repo, version: $version, artifactNumber: $artifactNumber, loader: $loader}'
+		'{filename: $filename, source: $source, url: $url, repo: $repo, version: $version, artifactNumber: $artifactNumber, loader: $loader, project: $project}'
 	)
 
 	tmp_file=$(mktemp)
