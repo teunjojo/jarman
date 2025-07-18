@@ -77,46 +77,75 @@ register_jar() {
 			for i in "${!sources[@]}"; do
 				echo -e " $i) ${sources[$i]}"
 			done
+
 			read -p "Select the number of the source: [0]: " source_index
+			# Validate user input
+			[[ ! "$source_index" =~ ^[0-9]$ ]] && error_handler "Invalid input!"
+
 			source="${sources[$source_index]}"
 			case "$source" in
 			"jenkins")
+				local url
 				read -p "What is the update URL? [<Jenkins URL>/job/<Project>]: " url
+				# Validate user input
+				[[ ! "$url" =~ ^https?://([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(/[^[:space:]/?#]+)*/job/[a-zA-Z0-9._~%-]+/?$ ]] && error_handler "Invalid input!"
+
 				local metadata=$(curl -s "$url/lastSuccessfulBuild/api/json")
 				readarray artifacts < <(echo "$metadata" | jq -r '.artifacts[].displayPath')
 				echo "Available artifacts: "
 				for i in "${!artifacts[@]}"; do
 					echo -ne " $i) ${artifacts[$i]}"
 				done
+				local artifact_number
 				read -p "Select the number of the artifact: [0]: " artifact_number
+				# Validate user input
+				[[ ! "$artifact_number" =~ ^[0-9]$ ]] && error_handler "Invalid input!"
 				;;
 			"github-releases")
+				local repo
 				read -p "What is the name of the GitHub repo? [<User>/<Repository>]: " repo
+				# Validate user input
+				[[ ! "$repo" =~ ^[a-zA-Z0-9._~%-]+/[a-zA-Z0-9._~%-]+$ ]] && error_handler "Invalid input!"
+
 				local metadata=$(ghr_curl "https://api.github.com/repos/$repo/releases/latest")
 				readarray artifacts < <(echo "$metadata" | jq -r '.assets[].name')
 				echo "Available artifacts: "
 				for i in "${!artifacts[@]}"; do
 					echo -ne " $i) ${artifacts[$i]}"
 				done
+				local artifact_number
 				read -p "Select the number of the artifact: [0]: " artifact_number
+				# Validate user input
+				[[ ! "$artifact_number" =~ ^[0-9]$ ]] && error_handler "Invalid input!"
 				;;
 			"modrinth")
+				local project
 				read -p "What is the name of the project? [id|slug]: " project
+				# Validate user input
+				[[ ! "$project" =~ [a-zA-Z0-9._~%-]$ ]] && error_handler "Invalid input!"
+
 				local metadata=$(modrinth_curl "https://api.modrinth.com/v2/project/$project")
 				echo "Select the correct loader: "
 				readarray loaders < <(echo "$metadata" | jq -r '.loaders[]')
 				for i in "${!loaders[@]}"; do
 					echo -ne " $i) ${loaders[$i]}"
 				done
+				local loader
 				read -p "Select the number of the loader: [0]: " loader_index
+				# Validate user input
+				[[ ! "$loader_index" =~ ^[0-9]$ ]] && error_handler "Invalid input!"
+
 				loader="$(echo "$metadata" | jq -r --arg index $loader_index '.loaders[$index|tonumber]')"
-				local version_metadata="$(modrinth_curl "https://api.modrinth.com/v2/project/$project/version?loaders=loader=%5B%22$loader%22%5D")"
+				local version_metadata="$(modrinth_curl "https://api.modrinth.com/v2/project/$project/version?loaders=%5B%22$loader%22%5D")"
 				echo "Select the correct file: "
 				readarray files < <(echo "$version_metadata" | jq -r '.[0].files.[].filename')
 				for i in "${!files[@]}"; do
 					echo -ne " $i) ${files[$i]}"
 				done
+				local artifact_number
 				read -p "Select the number of the file: [0]: " artifact_number
+				# Validate user input
+				[[ ! "$artifact_number" =~ ^[0-9]$ ]] && error_handler "Invalid input!"
 				;;
 			esac
 			break
