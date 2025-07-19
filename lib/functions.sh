@@ -23,11 +23,16 @@ source "$root_dir/lib/modrinth.sh" || error_handler "Failed to source '$root_dir
 #######################################
 usage() {
 	cat <<EOF
-Usage: $0 [ -v ] [ -h ] <working_directory>
+jarman.
 
-This script scans the JAR files in a specified directory, checks for updates, and allows you to update them.
+Usage:
+  $0 <working_directory>
+  $0 -h
+  $0 -v
 
-Example: $0 folder/
+Options:
+  -h  Show this screen.
+  -v  Show version.
 EOF
 }
 
