@@ -73,15 +73,12 @@ ghr_curl() {
 	status=$(curl "${curl_opts[@]}" "$url")
 
 	case "$status" in
-	"200")
-		;;
-
-	"403")
-		error_handler "$(cat "$response" | jq '.message')"
-		;;
-
+	"200") ;;
 	"404")
 		error_handler "Not Found"
+		;;
+	*)
+		error_handler "$(cat "$response" | jq '.message')"
 		;;
 	esac
 

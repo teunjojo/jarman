@@ -69,13 +69,11 @@ modrinth_curl() {
 
 	case "$status" in
 	"200") ;;
-
-	"403")
-		error_handler "$(cat "$response" | jq '.message')"
-		;;
-
 	"404")
 		error_handler "Not Found"
+		;;
+	*)
+		error_handler "$(cat "$response" | jq '.message')"
 		;;
 	esac
 
