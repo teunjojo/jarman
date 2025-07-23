@@ -23,12 +23,10 @@ source "$root_dir/lib/modrinth.sh" || error_handler "Failed to source '$root_dir
 #######################################
 usage() {
 	cat <<EOF
-jarman.
-
 Usage:
   $0 <working_directory>
-  $0 -h
-  $0 -v
+  $0 -h | --help
+  $0 -v | --version
 
 Options:
   -h  Show this screen.
