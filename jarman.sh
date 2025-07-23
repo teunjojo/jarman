@@ -76,27 +76,38 @@ esac
 [ ! -d "$root_dir/lib" ] && error_handler "Library directory '$root_dir/lib' not found"
 source "$root_dir/lib/functions.sh" || error_handler "Failed to source '$root_dir/lib/functions.sh'"
 
+working_directory=""
+
 # Filter flags
-while getopts "hv" opt; do
-	case "$opt" in
-	h | -help)
+while [ $# -gt 0 ]; do
+	case "$1" in
+	-h | --help)
 		usage
 		exit 0
 		;;
-	v | -version)
+	-v | --version)
 		echo -e "$0 version $version"
 		exit 0
 		;;
-	*)
+	-*)
+		echo -e "Unknown option: $1"
 		usage
-		exit
+		exit 1
+		;;
+	*)
+		# First item that is not a flag
+		# If empty, display usage and exit
+		echo "$1" && read
+		[[ -z "$1" ]] && usage && exit 0
+		# Set working directory variable
+		working_directory="$1"
+		shift
 		;;
 	esac
+	shift
 done
 
 shift $((OPTIND - 1))
-
-working_directory=$1
 
 # Check if working directory is set
 [ -z "$working_directory" ] && error_handler "Directory not set\n\e[0m" && usage
