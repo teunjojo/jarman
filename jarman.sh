@@ -100,6 +100,8 @@ while [ $# -gt 0 ]; do
 		[[ -n "$file_to_add" ]] && echo -e "Only one operation may be used at a time" && usage && exit 0
 		# If no file parameter given, give usage error
 		[[ -z "$2" ]] && echo -e "$1 expects a string" && usage && exit 0
+		# If filename does NOT end in `.jar` give usage error
+		[[ ! "$2" =~ .+\.jar ]] && echo -e "Filename should end with '.jar'" && usage && exit 0 
 		file_to_add=$2
 		shift
 		;;
