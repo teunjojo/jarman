@@ -25,12 +25,14 @@ usage() {
 	cat <<EOF
 Usage:
   $0 <working_directory>
+  $0 <working_directory> (-a | -add) <filename.jar>
   $0 -h | --help
   $0 -v | --version
 
 Options:
-  -h  Show this screen.
-  -v  Show version.
+  -a --add <filename.jar>  Add a JAR file to jarman (must end with .jar)
+  -h                       Show this screen.
+  -v                       Show version.
 EOF
 }
 
