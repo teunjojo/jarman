@@ -68,8 +68,6 @@ register_jar() {
 	fi
 
 	while true; do
-		echo $seperator
-		echo -e "Unregistered JAR file found!"
 		read -p "Do you want to register '$jar_filename'? [Y/n] " -r
 		if [[ $REPLY =~ ^[Nn]$ ]]; then # If 'N' or 'n' then dont ask for user input
 			break
