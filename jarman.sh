@@ -51,16 +51,22 @@ trap 'echo -e "\e[33mExited unexpectedly.\nIf you think this is a bug, report it
 error_handler() {
 	local msg="$1"
 	local file="${BASH_SOURCE[1]}"
+	ansi_red='\e[31m'
+	ansi_bold_red='\e[1;31m'
+	ansi_reset='\e[0m'
+	ansi_clear_line='\033[1G\033[0m'
+
+
 	# If not DEBUG, print error like the following:
 	# <file>: <msg>
 	if [[ "$DEBUG" == "false" ]]; then
-		echo -e "\033[1G\033[0m\e[31m$file: $msg\e[0m" >&2
+		echo -e "${ansi_clear_line}${ansi_red}$file: $msg${ansi_reset}" >&2
 	else
 		local lineno="${BASH_LINENO[1]}"
 		local func="${FUNCNAME[2]}"
 		# If DEBUG, print error like the following:
 		# <file>: line <lineno>: (<func>): <msg>
-		echo -e "\033[1G\033[0m\e[31m$file: line $lineno: ($func)${msg:+:\e[1;31m $msg}\e[0m" >&2
+		echo -e "${ansi_clear_line}${ansi_red}$file: line $lineno: ($func)${msg:+:${ansi_bold_red} $msg}${ansi_reset}" >&2
 	fi
 	kill $pid
 }
