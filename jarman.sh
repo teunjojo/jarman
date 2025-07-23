@@ -135,14 +135,24 @@ main() {
 	cd "$working_directory"
 	echo -e "JAR files in '$working_directory':"
 
-	# If `file_to_add` is set, register it first
-	[[ -n "$file_to_add" ]] && register_jar $file_to_add
-
-	# Check if cache file is set
 	[ -z $cache_file ] && error_handler "Cache file location not set"
 	# If no cache file exists, create it
 	[ ! -f "$cache_file" ] && echo [] >$cache_file
 
+	# If `file_to_add` is set, register it first
+	if [[ -n "$file_to_add" ]]; then
+		# Create file
+		touch $file_to_add	
+		# Check if not already registered
+		jar_data=$(get_data "$file_to_add")
+		if [[ "$jar_data" == "null" || -z "$jar_data" ]]; then
+			register_jar "$file_to_add"
+		else
+			error_handler "'$file_to_add' already registered"
+		fi
+	fi
+
+	# Check if cache file is set
 	# Get exising JAR files from directory
 	shopt -s nullglob # So it returns empty when no matchces
 	local jar_files=(*.jar)
