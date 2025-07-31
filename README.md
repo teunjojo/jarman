@@ -3,15 +3,10 @@
 [![GitHub Release](https://img.shields.io/github/v/release/teunjojo/jarman?style=for-the-badge)](https://github.com/teunjojo/jarman/releases)
 [![GitHub commits since latest release](https://img.shields.io/github/commits-since/teunjojo/jarman/latest?style=for-the-badge)](https://github.com/teunjojo/jarman/commits)
 
-![Sources](https://img.shields.io/badge/Supported_Sources-gray?style=for-the-badge)&nbsp;&nbsp;
-[![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=fff)](https://www.jenkins.io/)
-[![GitHub Releases](https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=github&logoColor=fff)](https://docs.github.com/en/repositories/releasing-projects-on-github)
-[![GitHub Releases](https://img.shields.io/badge/Modrinth-00AF5C?style=for-the-badge&logo=modrinth&logoColor=fff)](https://modrinth.com/)
-
-![Loaders](https://img.shields.io/badge/Supported_loaders-gray?style=for-the-badge)&nbsp;&nbsp;
-[![Spigot](https://img.shields.io/badge/Spigot-ED8106?style=for-the-badge&logo=spigotmc&logoColor=fff)](https://www.spigotmc.org/)
-[![Fabric](https://img.shields.io/badge/Fabric-BCB29C?style=for-the-badge&logo=fabricmc&logoColor=333)](https://fabricmc.net/)
-[![NeoForge](https://img.shields.io/badge/NeoForge-d7742f?style=for-the-badge&logo=neoforge&logoColor=fff)](https://neoforged.net/)
+![Sources](https://img.shields.io/badge/Supported_Sources-gray?style=for-the-badge)
+[![Jenkins](https://badges.penpow.dev/badges/built-with/jenkins/compact-minimal.svg)](https://www.jenkins.io/)
+[![GitHub Releases](https://badges.penpow.dev/badges/available/github/compact-minimal.svg)](https://docs.github.com/en/repositories/releasing-projects-on-github)
+[![Modrinth](https://badges.penpow.dev/badges/available/modrinth/compact-minimal.svg)](https://modrinth.com/)
 
 ## Note: This is still in early Beta so it may contain bugs and lack features
 
